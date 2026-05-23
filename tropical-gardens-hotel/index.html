@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tropical Gardens Hotel — Where Nature Meets Luxury</title>
+  <meta name="description" content="Tropical Gardens Hotel — a luxury retreat nestled in lush tropical gardens. Book your stay today." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="#home" class="logo">
+        <span class="logo-leaf">🌿</span>
+        <span class="logo-text">Tropical Gardens <em>Hotel</em></span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#rooms">Rooms</a></li>
+        <li><a href="#amenities">Amenities</a></li>
+        <li><a href="#dining">Dining</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#book" class="nav-cta">Book Now</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="hero-bg" style="background-image: url('https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/59716bf7a_generated_image.png')"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-tag">Welcome to a world of tranquillity</p>
+      <h1>Where Nature<br /><span>Meets Luxury</span></h1>
+      <p class="hero-sub">A breathtaking retreat nestled in lush tropical gardens.<br>Rediscover peace, comfort, and the beauty of nature.</p>
+      <div class="hero-btns">
+        <a href="#book" class="btn btn-primary">Book Your Stay</a>
+        <a href="#about" class="btn btn-outline">Explore Hotel</a>
+      </div>
+    </div>
+    <div class="hero-scroll" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- QUICK BOOKING BAR -->
+  <section class="quick-book" id="book">
+    <div class="qb-container">
+      <h3>Reserve Your Room</h3>
+      <form class="qb-form" onsubmit="handleBooking(event)">
+        <div class="qb-field">
+          <label>Check-in</label>
+          <input type="date" id="checkin" required />
+        </div>
+        <div class="qb-field">
+          <label>Check-out</label>
+          <input type="date" id="checkout" required />
+        </div>
+        <div class="qb-field">
+          <label>Guests</label>
+          <select id="guests">
+            <option>1 Guest</option>
+            <option selected>2 Guests</option>
+            <option>3 Guests</option>
+            <option>4 Guests</option>
+          </select>
+        </div>
+        <div class="qb-field">
+          <label>Room Type</label>
+          <select id="roomtype">
+            <option>Garden View</option>
+            <option>Deluxe Suite</option>
+            <option>Executive Suite</option>
+            <option>Presidential Suite</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-gold">Check Availability</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="about section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-img-stack">
+          <img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/59716bf7a_generated_image.png" alt="Hotel exterior" class="about-img-main" />
+          <div class="about-badge">
+            <span class="badge-num">15+</span>
+            <span class="badge-label">Years of Excellence</span>
+          </div>
+        </div>
+        <div class="about-text">
+          <p class="section-tag">Our Story</p>
+          <h2 class="section-title">A Sanctuary in the Heart of Tropical Nature</h2>
+          <p>Tropical Gardens Hotel is more than a place to stay — it's an experience. Set within three acres of manicured tropical gardens, our hotel blends colonial elegance with modern luxury to create a true retreat from the ordinary.</p>
+          <p>From the moment you arrive, the scent of frangipani and the song of tropical birds will tell you that you have found somewhere truly special.</p>
+          <div class="about-stats">
+            <div class="stat"><strong>48</strong><span>Rooms &amp; Suites</span></div>
+            <div class="stat"><strong>3</strong><span>Acres of Gardens</span></div>
+            <div class="stat"><strong>5★</strong><span>Guest Rating</span></div>
+          </div>
+          <a href="#rooms" class="btn btn-primary">View Our Rooms</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROOMS -->
+  <section id="rooms" class="rooms section bg-cream">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-tag">Accommodation</p>
+        <h2 class="section-title">Rooms &amp; Suites</h2>
+        <p class="section-sub">Every room is a private sanctuary designed with your comfort in mind.</p>
+      </div>
+      <div class="rooms-grid">
+
+        <div class="room-card">
+          <div class="room-img">
+            <img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/9d87eef3a_generated_image.png" alt="Garden View Room" />
+            <div class="room-badge">From UGX 180,000/night</div>
+          </div>
+          <div class="room-body">
+            <h3>Garden View Room</h3>
+            <p>Wake up to sweeping views of our lush tropical gardens. Thoughtfully appointed with handcrafted furniture and all modern comforts.</p>
+            <ul class="room-features">
+              <li>🛏 King or Twin Beds</li>
+              <li>📶 High-Speed Wi-Fi</li>
+              <li>❄️ Air Conditioning</li>
+              <li>🛁 En-suite Bathroom</li>
+            </ul>
+            <a href="#contact" class="btn btn-outline-dark">Book This Room</a>
+          </div>
+        </div>
+
+        <div class="room-card featured">
+          <div class="room-featured-tag">Most Popular</div>
+          <div class="room-img">
+            <img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/9d87eef3a_generated_image.png" alt="Deluxe Suite" />
+            <div class="room-badge">From UGX 280,000/night</div>
+          </div>
+          <div class="room-body">
+            <h3>Deluxe Garden Suite</h3>
+            <p>Spacious suites with a private garden terrace, living area, and panoramic views. Perfect for couples and special occasions.</p>
+            <ul class="room-features">
+              <li>🛏 King Bed + Living Area</li>
+              <li>🌿 Private Garden Terrace</li>
+              <li>🍾 Welcome Champagne</li>
+              <li>🛁 Clawfoot Bathtub</li>
+            </ul>
+            <a href="#contact" class="btn btn-primary">Book This Suite</a>
+          </div>
+        </div>
+
+        <div class="room-card">
+          <div class="room-img">
+            <img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/9d87eef3a_generated_image.png" alt="Presidential Suite" />
+            <div class="room-badge">From UGX 550,000/night</div>
+          </div>
+          <div class="room-body">
+            <h3>Presidential Suite</h3>
+            <p>The pinnacle of luxury. Two bedrooms, a full dining room, private plunge pool, and dedicated butler service.</p>
+            <ul class="room-features">
+              <li>🛏 2 Bedrooms</li>
+              <li>🏊 Private Plunge Pool</li>
+              <li>🍽️ Private Dining</li>
+              <li>👤 Dedicated Butler</li>
+            </ul>
+            <a href="#contact" class="btn btn-outline-dark">Book This Suite</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- AMENITIES -->
+  <section id="amenities" class="amenities section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-tag">Facilities</p>
+        <h2 class="section-title">Hotel Amenities</h2>
+        <p class="section-sub">Everything you need for a perfect stay — all within our tropical paradise.</p>
+      </div>
+      <div class="amenities-grid">
+        <div class="amenity-card">
+          <div class="amenity-icon">🏊</div>
+          <h4>Swimming Pool</h4>
+          <p>Olympic-length outdoor pool set amid tropical gardens. Open 6am – 10pm.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">💆</div>
+          <h4>Spa &amp; Wellness</h4>
+          <p>Full-service spa with massage, facials, and traditional African treatments.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">🏋️</div>
+          <h4>Fitness Centre</h4>
+          <p>State-of-the-art gym with garden views. Personal training available.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">🤝</div>
+          <h4>Conference Rooms</h4>
+          <p>3 fully-equipped conference halls for up to 200 delegates. AV, catering included.</p>
+          <img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/40e98a749_generated_image.png" alt="Conference" class="amenity-img" />
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">🌿</div>
+          <h4>Tropical Gardens</h4>
+          <p>Three acres of curated gardens with walking paths, pavilions, and exotic flora.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">🅿️</div>
+          <h4>Free Parking</h4>
+          <p>Secure, guarded parking for all hotel guests, 24 hours a day.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">📶</div>
+          <h4>High-Speed Wi-Fi</h4>
+          <p>Fibre-optic Wi-Fi throughout all rooms, gardens, and public areas.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">✈️</div>
+          <h4>Airport Transfers</h4>
+          <p>Luxury shuttle and private car transfers from Entebbe International Airport.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POOL HIGHLIGHT -->
+  <section class="pool-banner">
+    <div class="pool-bg" style="background-image: url('https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/d307f0cf6_generated_image.png')"></div>
+    <div class="pool-overlay"></div>
+    <div class="pool-content">
+      <h2>Dive Into Paradise</h2>
+      <p>Relax poolside surrounded by swaying palms and the sounds of nature. Our pool bar serves refreshing tropical cocktails all day long.</p>
+      <a href="#book" class="btn btn-gold">Book a Stay</a>
+    </div>
+  </section>
+
+  <!-- DINING -->
+  <section id="dining" class="dining section bg-cream">
+    <div class="container">
+      <div class="dining-grid">
+        <div class="dining-text">
+          <p class="section-tag">Food &amp; Drink</p>
+          <h2 class="section-title">The Garden Restaurant</h2>
+          <p>Our award-winning restaurant celebrates the rich flavours of Uganda and East Africa alongside international cuisine. Dine al fresco in the gardens or in the elegant indoor setting.</p>
+          <div class="dining-highlights">
+            <div class="dining-item">
+              <span class="d-icon">🌅</span>
+              <div>
+                <strong>Breakfast Buffet</strong>
+                <p>Daily 6:30am – 10:30am. Fresh tropical fruits, local dishes, continental spread.</p>
+              </div>
+            </div>
+            <div class="dining-item">
+              <span class="d-icon">🍽️</span>
+              <div>
+                <strong>Lunch &amp; Dinner</strong>
+                <p>A la carte menu featuring Ugandan specialties and international favourites.</p>
+              </div>
+            </div>
+            <div class="dining-item">
+              <span class="d-icon">🍹</span>
+              <div>
+                <strong>Garden Bar</strong>
+                <p>Craft cocktails, imported wines, and local beers in our open-air garden bar.</p>
+              </div>
+            </div>
+          </div>
+          <a href="#contact" class="btn btn-primary">Reserve a Table</a>
+        </div>
+        <div class="dining-img">
+          <img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/0818908df_generated_image.png" alt="The Garden Restaurant" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials section">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-tag">Guest Reviews</p>
+        <h2 class="section-title">What Our Guests Say</h2>
+      </div>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p>"Absolutely magical. The gardens are breathtaking and the staff made us feel like royalty. We will definitely be back!"</p>
+          <div class="testi-author">
+            <div class="testi-avatar">SN</div>
+            <div><strong>Sarah N.</strong><span>Kampala, Uganda</span></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p>"The best hotel experience I've had in East Africa. The food was exceptional and the garden suites are truly spectacular."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">JM</div>
+            <div><strong>James M.</strong><span>Nairobi, Kenya</span></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p>"We hosted our corporate retreat here. The conference facilities are world-class and the team was incredibly professional."</p>
+          <div class="testi-author">
+            <div class="testi-avatar">AT</div>
+            <div><strong>Amara T.</strong><span>Dar es Salaam</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="gallery section bg-cream">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-tag">Gallery</p>
+        <h2 class="section-title">Experience the Beauty</h2>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item gi-tall"><img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/59716bf7a_generated_image.png" alt="Hotel exterior" /></div>
+        <div class="gallery-item"><img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/9d87eef3a_generated_image.png" alt="Room" /></div>
+        <div class="gallery-item"><img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/d307f0cf6_generated_image.png" alt="Pool" /></div>
+        <div class="gallery-item gi-wide"><img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/0818908df_generated_image.png" alt="Restaurant" /></div>
+        <div class="gallery-item"><img src="https://media.base44.com/images/public/6a06dff0946d9cf169ac63e2/40e98a749_generated_image.png" alt="Conference" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <p class="section-tag">Find Us</p>
+          <h2 class="section-title">Get in Touch</h2>
+          <p>We'd love to hear from you. Reach out for reservations, events, or any enquiries.</p>
+          <div class="contact-details">
+            <div class="contact-row">
+              <span class="c-icon">📍</span>
+              <div><strong>Address</strong><p>Plot 45, Garden Road, Kampala, Uganda</p></div>
+            </div>
+            <div class="contact-row">
+              <span class="c-icon">📞</span>
+              <div><strong>Phone</strong><p>+256 750 000 000 &nbsp;|&nbsp; +256 780 000 000</p></div>
+            </div>
+            <div class="contact-row">
+              <span class="c-icon">✉️</span>
+              <div><strong>Email</strong><p>reservations@tropicalgardens.ug</p></div>
+            </div>
+            <div class="contact-row">
+              <span class="c-icon">🕐</span>
+              <div><strong>Reception</strong><p>Open 24 hours · 7 days a week</p></div>
+            </div>
+          </div>
+          <div class="social-links">
+            <a href="#" class="social-btn">Facebook</a>
+            <a href="#" class="social-btn">Instagram</a>
+            <a href="#" class="social-btn">WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="contact-form-wrap">
+          <form class="contact-form" onsubmit="handleContact(event)">
+            <h3>Send a Message</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" placeholder="Your name" required />
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="you@email.com" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" placeholder="+256 7XX XXX XXX" />
+            </div>
+            <div class="form-group">
+              <label>Subject</label>
+              <select>
+                <option>Room Reservation</option>
+                <option>Conference / Event</option>
+                <option>Restaurant Booking</option>
+                <option>Spa Appointment</option>
+                <option>General Enquiry</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Message</label>
+              <textarea placeholder="How can we help you?" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary full-btn">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="footer-logo">🌿 Tropical Gardens Hotel</p>
+          <p>A breathtaking retreat nestled in lush tropical gardens. Where nature meets luxury.</p>
+          <div class="social-links mt">
+            <a href="#">FB</a><a href="#">IG</a><a href="#">TW</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#rooms">Rooms & Suites</a></li>
+            <li><a href="#amenities">Amenities</a></li>
+            <li><a href="#dining">Dining</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#">Conference &amp; Events</a></li>
+            <li><a href="#">Spa &amp; Wellness</a></li>
+            <li><a href="#">Airport Transfers</a></li>
+            <li><a href="#">Weddings</a></li>
+            <li><a href="#">Team Building</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>Plot 45, Garden Road<br />Kampala, Uganda</p>
+          <p>+256 750 000 000</p>
+          <p>reservations@tropicalgardens.ug</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Tropical Gardens Hotel. All rights reserved.</p>
+        <div><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Service</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SUCCESS TOAST -->
+  <div class="toast" id="toast">✅ Message sent! We'll be in touch soon.</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
