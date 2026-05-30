@@ -1,32 +1,19 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
-
-Deno.serve(async (req) => {
-  const corsHeaders = {
+export default async function handler(req: Request): Promise<Response> {
+  const cors = {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "GET,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
   };
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
 
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+  const anon = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+  const url  = "https://eiyexnuhqdscomilwpqg.supabase.co/rest/v1/menu_items?select=*&order=sort_order.asc,name.asc";
 
-  try {
-    const base44 = createClientFromRequest(req);
-    // Use service role to allow public read of menu items
-    const allItems = await base44.asServiceRole.entities.MenuItem.list();
+  const r    = await fetch(url, { headers: { "apikey": anon, "Authorization": "Bearer " + anon } });
+  const data = await r.json();
 
-    const items = (allItems || []).filter((item: any) => item.is_available !== false);
-
-    const categoryOrder = ["Breakfast", "Lunch", "Dinner", "Drinks", "Desserts", "Snacks"];
-    items.sort((a: any, b: any) => {
-      const catDiff = categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
-      if (catDiff !== 0) return catDiff;
-      return (a.sort_order || 0) - (b.sort_order || 0);
-    });
-
-    return Response.json({ items }, { headers: corsHeaders });
-  } catch (error: any) {
-    return Response.json({ error: error.message, items: [] }, { status: 200, headers: corsHeaders });
-  }
-});
+  return new Response(JSON.stringify(data), {
+    status: r.status,
+    headers: { ...cors, "Content-Type": "application/json" },
+  });
+}
