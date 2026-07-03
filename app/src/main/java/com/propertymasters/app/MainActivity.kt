@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,9 @@ import com.propertymasters.app.ui.screens.HomeScreen
 import com.propertymasters.app.ui.screens.JobsScreen
 import com.propertymasters.app.ui.screens.PropertiesScreen
 import com.propertymasters.app.ui.theme.PropertyMastersTheme
+import com.propertymasters.app.update.UpdateAvailableDialog
+import com.propertymasters.app.update.UpdateChecker
+import com.propertymasters.app.update.UpdateInfo
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +47,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PropertyMastersRoot() {
     var isLoggedIn by remember { mutableStateOf(AuthRepository.isLoggedIn()) }
+    var updateInfo by remember { mutableStateOf<UpdateInfo?>(null) }
+
+    LaunchedEffect(Unit) {
+        updateInfo = UpdateChecker.checkForUpdate(BuildConfig.VERSION_CODE)
+    }
+
+    updateInfo?.let { info ->
+        UpdateAvailableDialog(update = info, onDismiss = { updateInfo = null })
+    }
 
     if (isLoggedIn) {
         PropertyMastersApp(onLogout = {

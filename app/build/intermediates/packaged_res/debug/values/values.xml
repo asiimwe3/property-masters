@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="off_white">#F4F7F6</color>
+    <color name="teal_dark">#0B5A54</color>
+    <color name="teal_light">#14B8A6</color>
+    <color name="teal_primary">#0F766E</color>
+    <string name="app_name">Property Masters</string>
+    <string name="gcm_defaultSenderId" translatable="false">514600033468</string>
+    <string name="google_api_key" translatable="false">AIzaSyBoAFy01pixVqRx0szDBpvuE28wdFqwLgw</string>
+    <string name="google_app_id" translatable="false">1:514600033468:android:c3ae8e816814b7781ac4b9</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBoAFy01pixVqRx0szDBpvuE28wdFqwLgw</string>
+    <string name="google_storage_bucket" translatable="false">property-masters-df9f3.firebasestorage.app</string>
+    <string name="project_id" translatable="false">property-masters-df9f3</string>
+    <style name="Theme.PropertyMasters" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/teal_primary</item>
+        <item name="android:windowBackground">@color/off_white</item>
+    </style>
+</resources>
