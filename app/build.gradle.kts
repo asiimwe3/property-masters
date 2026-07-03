@@ -21,13 +21,26 @@ android {
         }
     }
 
+    signingConfigs {
+        create("consistent") {
+            storeFile = file("../keystore/property-masters.keystore")
+            storePassword = "propertymasters123"
+            keyAlias = "propertymasters"
+            keyPassword = "propertymasters123"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("consistent")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("consistent")
         }
     }
 
