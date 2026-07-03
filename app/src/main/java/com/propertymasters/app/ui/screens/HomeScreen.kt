@@ -7,24 +7,41 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.propertymasters.app.data.FirebaseRepository
 import com.propertymasters.app.data.MockData
+import com.propertymasters.app.data.Property
 import com.propertymasters.app.ui.components.FeaturedPropertyCard
 import com.propertymasters.app.ui.components.SearchBarUi
 import com.propertymasters.app.ui.components.SectionHeader
 import com.propertymasters.app.ui.theme.ChipTealBg
 import com.propertymasters.app.ui.theme.OffWhite
+import com.propertymasters.app.ui.theme.TealPrimary
 import com.propertymasters.app.ui.theme.TextPrimary
 
 @Composable
 fun HomeScreen(onPropertyClick: (Int) -> Unit) {
+    var properties by remember { mutableStateOf<List<Property>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        properties = FirebaseRepository.getProperties()
+        isLoading = false
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -57,9 +74,15 @@ fun HomeScreen(onPropertyClick: (Int) -> Unit) {
         SectionHeader(title = "Featured Properties", actionLabel = "See all")
         Spacer(Modifier.height(12.dp))
 
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            items(MockData.properties.filter { it.isFeatured }) { property ->
-                FeaturedPropertyCard(property = property, onView = { onPropertyClick(property.id) })
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxWidth().padding(vertical = 24.dp), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = TealPrimary)
+            }
+        } else {
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
+                items(properties.filter { it.isFeatured }) { property ->
+                    FeaturedPropertyCard(property = property, onView = { onPropertyClick(property.id) })
+                }
             }
         }
 

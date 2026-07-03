@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.propertymasters.app.data.AuthRepository
 import com.propertymasters.app.data.MockData
 import com.propertymasters.app.ui.theme.*
 
@@ -57,7 +58,8 @@ fun AccountScreen(onLogout: () -> Unit) {
                 )
                 Spacer(Modifier.width(14.dp))
                 Column {
-                    Text("Sarah Miller", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextPrimary)
+                    val displayName = AuthRepository.currentUser?.email?.substringBefore("@") ?: "Member"
+                    Text(displayName, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = TextPrimary)
                     Box(
                         modifier = Modifier
                             .background(ChipTealBg, RoundedCornerShape(10.dp))

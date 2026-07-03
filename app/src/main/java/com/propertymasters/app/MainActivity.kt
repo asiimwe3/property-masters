@@ -7,14 +7,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.propertymasters.app.data.AuthRepository
 import com.propertymasters.app.navigation.NavRoutes
 import com.propertymasters.app.ui.components.BottomNavBar
 import com.propertymasters.app.ui.screens.AccountScreen
+import com.propertymasters.app.ui.screens.AuthScreen
 import com.propertymasters.app.ui.screens.BrokersScreen
 import com.propertymasters.app.ui.screens.HomeScreen
 import com.propertymasters.app.ui.screens.JobsScreen
@@ -27,7 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PropertyMastersTheme {
                 Surface {
-                    PropertyMastersApp()
+                    PropertyMastersRoot()
                 }
             }
         }
@@ -35,7 +41,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun PropertyMastersApp() {
+fun PropertyMastersRoot() {
+    var isLoggedIn by remember { mutableStateOf(AuthRepository.isLoggedIn()) }
+
+    if (isLoggedIn) {
+        PropertyMastersApp(onLogout = {
+            AuthRepository.signOut()
+            isLoggedIn = false
+        })
+    } else {
+        AuthScreen(onAuthenticated = { isLoggedIn = true })
+    }
+}
+
+@Composable
+fun PropertyMastersApp(onLogout: () -> Unit) {
     val navController: NavHostController = rememberNavController()
 
     Scaffold(
@@ -59,7 +79,7 @@ fun PropertyMastersApp() {
                 JobsScreen(onApply = { /* navigate to job application (future) */ })
             }
             composable(NavRoutes.Account.route) {
-                AccountScreen(onLogout = { /* handle logout (future) */ })
+                AccountScreen(onLogout = onLogout)
             }
         }
     }
