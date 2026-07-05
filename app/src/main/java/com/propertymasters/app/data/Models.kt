@@ -2,6 +2,7 @@ package com.propertymasters.app.data
 
 data class Property(
     val id: Int,
+    val docId: String = "",
     val title: String,
     val price: String,
     val imageUrl: String,
@@ -9,7 +10,8 @@ data class Property(
     val baths: Int,
     val location: String,
     val category: String,
-    val isFeatured: Boolean = false
+    val isFeatured: Boolean = false,
+    val ownerId: String = ""
 )
 
 data class Broker(

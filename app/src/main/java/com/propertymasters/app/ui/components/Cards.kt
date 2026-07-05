@@ -4,7 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.foundation.clickable
+import androidx.compose.ui.graphics.Color as ComposeColor
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +26,13 @@ import com.propertymasters.app.data.Property
 import com.propertymasters.app.ui.theme.*
 
 @Composable
-fun PropertyGridCard(property: Property, onView: () -> Unit, modifier: Modifier = Modifier) {
+fun PropertyGridCard(
+    property: Property,
+    onView: () -> Unit,
+    modifier: Modifier = Modifier,
+    isFavorite: Boolean = false,
+    onToggleFavorite: (() -> Unit)? = null
+) {
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -30,15 +40,35 @@ fun PropertyGridCard(property: Property, onView: () -> Unit, modifier: Modifier 
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
         Column {
-            AsyncImage(
-                model = property.imageUrl,
-                contentDescription = property.title,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(110.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-            )
+            Box {
+                AsyncImage(
+                    model = property.imageUrl,
+                    contentDescription = property.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(110.dp)
+                        .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                )
+                if (onToggleFavorite != null) {
+                    Box(
+                        modifier = Modifier
+                            .padding(6.dp)
+                            .align(Alignment.TopEnd)
+                            .size(26.dp)
+                            .background(ComposeColor.White.copy(alpha = 0.85f), RoundedCornerShape(13.dp))
+                            .clickable { onToggleFavorite() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            contentDescription = "Favorite",
+                            tint = if (isFavorite) ComposeColor(0xFFE0245E) else TextMuted,
+                            modifier = Modifier.size(15.dp)
+                        )
+                    }
+                }
+            }
             Column(modifier = Modifier.padding(10.dp)) {
                 Text(
                     property.title,

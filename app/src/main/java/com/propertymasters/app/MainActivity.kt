@@ -21,6 +21,9 @@ import com.propertymasters.app.data.AuthRepository
 import com.propertymasters.app.navigation.NavRoutes
 import com.propertymasters.app.ui.components.BottomNavBar
 import com.propertymasters.app.ui.screens.AccountScreen
+import com.propertymasters.app.ui.screens.FavoritesScreen
+import com.propertymasters.app.ui.screens.MyListingsScreen
+import com.propertymasters.app.ui.screens.PrivacyPolicyScreen
 import com.propertymasters.app.ui.screens.AuthScreen
 import com.propertymasters.app.ui.screens.BrokersScreen
 import com.propertymasters.app.ui.screens.HomeScreen
@@ -92,7 +95,27 @@ fun PropertyMastersApp(onLogout: () -> Unit) {
                 JobsScreen(onApply = { /* navigate to job application (future) */ })
             }
             composable(NavRoutes.Account.route) {
-                AccountScreen(onLogout = onLogout)
+                AccountScreen(
+                    onLogout = onLogout,
+                    onOpenMyListings = { navController.navigate(NavRoutes.MyListings.route) },
+                    onOpenFavorites = { navController.navigate(NavRoutes.Favorites.route) },
+                    onOpenPrivacyPolicy = { navController.navigate(NavRoutes.PrivacyPolicy.route) }
+                )
+            }
+            composable(NavRoutes.MyListings.route) {
+                MyListingsScreen(
+                    onBack = { navController.popBackStack() },
+                    onPropertyClick = { /* navigate to property detail (future) */ }
+                )
+            }
+            composable(NavRoutes.Favorites.route) {
+                FavoritesScreen(
+                    onBack = { navController.popBackStack() },
+                    onPropertyClick = { /* navigate to property detail (future) */ }
+                )
+            }
+            composable(NavRoutes.PrivacyPolicy.route) {
+                PrivacyPolicyScreen(onBack = { navController.popBackStack() })
             }
         }
     }

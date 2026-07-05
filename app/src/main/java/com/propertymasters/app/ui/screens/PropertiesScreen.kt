@@ -25,14 +25,19 @@ import com.propertymasters.app.ui.components.PropertyGridCard
 import com.propertymasters.app.ui.theme.OffWhite
 import com.propertymasters.app.ui.theme.TealPrimary
 import com.propertymasters.app.ui.theme.TextPrimary
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
 @Composable
 fun PropertiesScreen(onPropertyClick: (Int) -> Unit) {
     var properties by remember { mutableStateOf<List<Property>>(emptyList()) }
+    var favoriteIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     var isLoading by remember { mutableStateOf(true) }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         properties = FirebaseRepository.getProperties()
+        favoriteIds = FirebaseRepository.getFavoriteDocIds()
         isLoading = false
     }
 
@@ -65,7 +70,23 @@ fun PropertiesScreen(onPropertyClick: (Int) -> Unit) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(properties) { property ->
-                    PropertyGridCard(property = property, onView = { onPropertyClick(property.id) })
+                    val isFav = favoriteIds.contains(property.docId)
+                    PropertyGridCard(
+                        property = property,
+                        onView = { onPropertyClick(property.id) },
+                        isFavorite = isFav,
+                        onToggleFavorite = {
+                            scope.launch {
+                                if (isFav) {
+                                    FirebaseRepository.removeFavorite(property.docId)
+                                    favoriteIds = favoriteIds - property.docId
+                                } else {
+                                    FirebaseRepository.addFavorite(property.docId)
+                                    favoriteIds = favoriteIds + property.docId
+                                }
+                            }
+                        }
+                    )
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.propertymasters.app.data
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.tasks.await
 
 object AuthRepository {
@@ -28,6 +29,17 @@ object AuthRepository {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             result.user?.let { Result.success(it) }
                 ?: Result.failure(Exception("Sign in failed — no user returned"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun signInWithGoogle(idToken: String): Result<FirebaseUser> {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val result = auth.signInWithCredential(credential).await()
+            result.user?.let { Result.success(it) }
+                ?: Result.failure(Exception("Google sign-in failed — no user returned"))
         } catch (e: Exception) {
             Result.failure(e)
         }
