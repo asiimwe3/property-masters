@@ -878,7 +878,29 @@ el('authPassword').addEventListener('keydown',e=>{if(e.key==='Enter')handleAuth(
 el('authEmail').addEventListener('keydown',e=>{if(e.key==='Enter')el('authPassword').focus();});
 
 // PWA
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    // Check for a new version on load and every 30 minutes while the app is open.
+    setInterval(()=>reg.update().catch(()=>{}),30*60*1000);
+    reg.addEventListener('updatefound',()=>{
+      const newWorker=reg.installing;
+      if(!newWorker)return;
+      newWorker.addEventListener('statechange',()=>{
+        if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
+          // A new version is ready — activate it and reload automatically.
+          showToast('Updating to the latest version...','success');
+          newWorker.postMessage({type:'SKIP_WAITING'});
+        }
+      });
+    });
+  }).catch(()=>{});
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(refreshing)return;
+    refreshing=true;
+    window.location.reload();
+  });
+}
 </script>
 </body>
 </html>
