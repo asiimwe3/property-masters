@@ -696,7 +696,13 @@ function propertyFormModal(p){
               ${['Available','Sold','Rented','Pending'].map(s=>`<option value="${s}" ${p&&(p.status||'Available')===s?'selected':''}>${s}</option>`).join('')}
             </select></div>
           </div>
-          <div class="form-group"><label>Image URL</label><input type="url" id="f_imageUrl" value="${p?esc(p.imageUrl||''):''}" placeholder="https://..."></div>
+          <div class="form-group">
+            <label>Property Photo</label>
+            <div id="imgPreviewWrap" style="margin-bottom:8px">${p&&p.imageUrl?`<img src="${esc(p.imageUrl)}" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px">`:''}</div>
+            <input type="file" id="f_imageFile" accept="image/*" onchange="handleImageUpload(this)">
+            <input type="hidden" id="f_imageUrl" value="${p?esc(p.imageUrl||''):''}">
+            <div id="uploadStatus" style="font-size:12px;color:var(--text-secondary);margin-top:4px"></div>
+          </div>
           <div class="form-group"><label>Description</label><textarea id="f_description" placeholder="Describe the property...">${p?esc(p.description||''):''}</textarea></div>
           <div class="form-row">
             <div class="form-group"><label>Agent Name</label><input type="text" id="f_agentName" value="${p?esc(p.agentName||''):''}" placeholder="Agent name"></div>
@@ -709,6 +715,36 @@ function propertyFormModal(p){
       </div>
     </div>
   </div>`;
+}
+
+async function handleImageUpload(input){
+  const file=input.files&&input.files[0];
+  if(!file)return;
+  if(file.size>5*1024*1024){showToast('Image must be under 5MB','error');input.value='';return;}
+  const statusEl=el('uploadStatus');
+  statusEl.textContent='Uploading photo...';
+  try{
+    const base64=await new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=reject;
+      reader.readAsDataURL(file);
+    });
+    const res=await fetch(`${API_BASE}/uploadPropertyImage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({base64,filename:file.name})
+    });
+    const data=await res.json();
+    if(!data.success)throw new Error(data.error||'Upload failed');
+    el('f_imageUrl').value=data.url;
+    el('imgPreviewWrap').innerHTML=`<img src="${data.url}" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px">`;
+    statusEl.textContent='✓ Photo uploaded';
+  }catch(e){
+    statusEl.textContent='';
+    showToast(e.message||'Upload failed','error');
+    input.value='';
+  }
 }
 
 async function submitProperty(editId){
