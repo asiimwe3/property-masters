@@ -241,6 +241,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
       <div class="nav-item" data-screen="properties" onclick="navigate('properties')"><span class="icon">📋</span> Properties</div>
       <div class="nav-item" data-screen="brokers" onclick="navigate('brokers')"><span class="icon">👤</span> Brokers</div>
       <div class="nav-item" data-screen="jobs" onclick="navigate('jobs')"><span class="icon">💼</span> Jobs</div>
+      <div class="nav-item" data-screen="pricing" onclick="navigate('pricing')"><span class="icon">💎</span> Pricing</div>
       <div class="nav-item" data-screen="account" onclick="navigate('account')"><span class="icon">⚙️</span> Account</div>
     </div>
     <div class="sidebar-footer">Property Masters © 2026<br>Uganda Real Estate Platform</div>
@@ -273,6 +274,7 @@ const API_BASE = `https://base44.app/api/apps/${APP_ID}/functions`;
 // State
 let currentScreen='home',currentFilter='All',jobTab='All',searchQuery='';
 let currentUser=null,authMode='signin',idToken=null;
+let mySubscription={hasActiveSubscription:false,plan:'Free'};
 let propertiesData=[],brokersData=[],jobsData=[];
 let dataLoaded={properties:false,brokers:false,jobs:false};
 
@@ -305,6 +307,7 @@ async function handleAuth(){
     el('topbarAvatar').textContent=currentUser.name.charAt(0).toUpperCase();
     showToast('Welcome back, '+currentUser.name+'!','success');
     await loadAllData();
+    await loadSubscriptionStatus();
     navigate('home');
   }catch(e){
     showAuthError(e.message||'Authentication failed. Please try again.');
@@ -407,7 +410,7 @@ function statusBadge(s){const cls={Available:'badge-available',Sold:'badge-sold'
 function navigate(screen){
   currentScreen=screen;
   document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.screen===screen));
-  const titles={home:'Dashboard',properties:'Properties',brokers:'Brokers',jobs:'Jobs',account:'Account'};
+  const titles={home:'Dashboard',properties:'Properties',brokers:'Brokers',jobs:'Jobs',pricing:'Pricing',account:'Account'};
   el('topbarTitle').textContent=titles[screen]||screen;
   render();
 }
@@ -419,6 +422,7 @@ function render(){
   else if(currentScreen==='properties')c.innerHTML=renderProperties();
   else if(currentScreen==='brokers')c.innerHTML=renderBrokers();
   else if(currentScreen==='jobs')c.innerHTML=renderJobs();
+  else if(currentScreen==='pricing')c.innerHTML=renderPricing();
   else if(currentScreen==='account')c.innerHTML=renderAccount();
 }
 
@@ -495,8 +499,10 @@ function propertyCardHTML(p){
     </div>
     <div class="actions">
       <button class="btn-view" onclick="event.stopPropagation();showPropertyModal('${p.id}')">View</button>
+      ${currentUser && p.listedBy===currentUser.email ? `
       <button class="btn-edit" onclick="event.stopPropagation();showEditPropertyModal('${p.id}')">Edit</button>
       <button class="btn-delete" onclick="event.stopPropagation();confirmDelete('${p.id}','${esc(p.title).replace(/'/g,"\\'")}')" style="padding:10px 12px;">🗑</button>
+      ` : ''}
     </div>
   </div>`;
 }
@@ -548,6 +554,62 @@ function renderJobs(){
     </div>`).join('')}</div>`}`;
 }
 
+function renderPricing(){
+  const plans=[
+    {name:'Free',price:0,currency:'UGX',cycle:'forever',maxListings:3,featured:0,perks:['3 property listings','Basic listing visibility','Standard support']},
+    {name:'Agent Pro',price:30000,currency:'UGX',cycle:'month',maxListings:20,featured:3,perks:['20 property listings','3 featured slots','Priority support','Agent profile badge']},
+    {name:'Agency Premium',price:150000,currency:'UGX',cycle:'month',maxListings:200,featured:15,perks:['200 property listings','15 featured slots','Team accounts','Dedicated support','Analytics dashboard']}
+  ];
+  const current=mySubscription.hasActiveSubscription?mySubscription.subscription.planName:'Free';
+  return `<div class="pricing-container" style="padding:8px 0">
+    <div style="text-align:center;margin-bottom:28px">
+      <h2 style="font-size:24px;font-weight:700;margin-bottom:6px">Choose Your Plan</h2>
+      <p style="color:var(--text-secondary)">Grow your reach with more listings and featured placement</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;max-width:1000px;margin:0 auto">
+      ${plans.map(p=>`
+        <div style="border:2px solid ${current===p.name?'var(--teal-primary)':'var(--border-gray)'};border-radius:16px;padding:28px 22px;background:#fff;position:relative">
+          ${current===p.name?'<div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--teal-primary);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px">CURRENT PLAN</div>':''}
+          <div style="font-size:18px;font-weight:700;margin-bottom:4px">${p.name}</div>
+          <div style="font-size:28px;font-weight:800;margin-bottom:16px">${p.price===0?'Free':p.currency+' '+p.price.toLocaleString()}<span style="font-size:13px;font-weight:500;color:var(--text-secondary)">${p.price===0?'':'/'+p.cycle}</span></div>
+          <div style="margin-bottom:20px">${p.perks.map(x=>`<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px">✓ ${x}</div>`).join('')}</div>
+          ${p.price===0?
+            `<button class="btn-auth" style="background:var(--border-gray);color:var(--text-primary);cursor:default">Included</button>`:
+            current===p.name?
+            `<button class="btn-auth" style="background:var(--border-gray);color:var(--text-primary);cursor:default">Active</button>`:
+            `<button class="btn-auth" onclick="subscribeToPlan('${p.name}')">Subscribe</button>`
+          }
+        </div>`).join('')}
+    </div>
+    <p style="text-align:center;color:var(--text-secondary);font-size:12px;margin-top:20px">Payments processed securely via Pesapal. You'll be redirected to complete checkout.</p>
+  </div>`;
+}
+
+async function subscribeToPlan(planName){
+  try{
+    showToast('Preparing checkout...','success');
+    const res=await fetch(`${API_BASE}/createSubscriptionOrder`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+idToken},
+      body:JSON.stringify({planName,userEmail:currentUser.email,firstName:currentUser.name})
+    });
+    const data=await res.json();
+    if(!data.success)throw new Error(data.error||'Failed to start checkout');
+    window.open(data.redirectUrl,'_blank');
+    showToast('Redirecting to secure payment...','success');
+  }catch(e){
+    showToast(e.message||'Could not start checkout','error');
+  }
+}
+
+async function loadSubscriptionStatus(){
+  try{
+    const res=await fetch(`${API_BASE}/checkSubscriptionStatus?userEmail=${encodeURIComponent(currentUser.email)}`);
+    const data=await res.json();
+    if(data.success)mySubscription=data;
+  }catch(e){console.error('Failed to load subscription status',e);}
+}
+
 function renderAccount(){
   return `<div class="account-container">
     <div class="account-header">
@@ -560,7 +622,7 @@ function renderAccount(){
     </div>
     <div class="stats-row" style="grid-template-columns:1fr 1fr;margin-bottom:24px">
       <div class="stat-card"><div class="label">My Listings</div><div class="value">${propertiesData.filter(p=>p.listedBy===currentUser?.email).length}</div></div>
-      <div class="stat-card"><div class="label">Account Status</div><div class="value" style="font-size:18px">Active</div></div>
+      <div class="stat-card"><div class="label">Current Plan</div><div class="value" style="font-size:18px">${mySubscription.hasActiveSubscription?mySubscription.subscription.planName:'Free'}</div></div>
     </div>
     <div class="account-menu">
       <div class="account-menu-item" onclick="showToast('My Listings — viewing your properties','success')"><span class="icon">🏠</span><span>My Listings</span></div>
