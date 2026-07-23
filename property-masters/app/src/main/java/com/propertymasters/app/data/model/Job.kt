@@ -7,6 +7,12 @@ data class Job(
     val location: String,
     val jobType: String,
     val salary: String,
-    val category: String, // "Agents", "Project Managers", etc.
-    val postedDaysAgo: Int
+    val category: String,
+    val postedDaysAgo: Int,
+    val description: String = "",
+    val requirements: List<String> = emptyList(),
+    val responsibilities: List<String> = emptyList(),
+    val contactEmail: String = "",
+    val contactPhone: String = "",
+    val logoUrl: String = ""
 )

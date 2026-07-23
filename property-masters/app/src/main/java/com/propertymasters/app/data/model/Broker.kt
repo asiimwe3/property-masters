@@ -7,5 +7,11 @@ data class Broker(
     val rating: Double,
     val reviewCount: Int,
     val photoUrl: String,
-    val listingsCount: Int
+    val listingsCount: Int,
+    val bio: String = "",
+    val phone: String = "",
+    val email: String = "",
+    val experienceYears: Int = 0,
+    val languages: List<String> = emptyList(),
+    val areasServed: List<String> = emptyList()
 )

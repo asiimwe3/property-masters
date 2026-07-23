@@ -11,5 +11,9 @@ data class UserProfile(
     val name: String,
     val email: String,
     val photoUrl: String,
-    val isVerified: Boolean
+    val isVerified: Boolean,
+    val phone: String = "",
+    val joinedDate: String = "",
+    val savedProperties: List<String> = emptyList(),
+    val listedProperties: List<String> = emptyList()
 )
