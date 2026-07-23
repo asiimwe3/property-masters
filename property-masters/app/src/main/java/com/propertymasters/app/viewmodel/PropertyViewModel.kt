@@ -1,16 +1,25 @@
 package com.propertymasters.app.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.propertymasters.app.data.model.Property
+import com.propertymasters.app.data.repository.FirebaseRepository
 import com.propertymasters.app.data.repository.MockDataRepository
+import kotlinx.coroutines.launch
 
 class PropertyViewModel : ViewModel() {
 
-    private val allProperties = MockDataRepository.properties
+    private val TAG = "PropertyVM"
+
+    private var allProperties = MockDataRepository.properties
+
+    var isLoading by mutableStateOf(true)
+        private set
 
     var searchQuery by mutableStateOf("")
         private set
@@ -32,7 +41,26 @@ class PropertyViewModel : ViewModel() {
 
     val savedPropertyIds = mutableStateListOf<String>()
 
-    val categories = MockDataRepository.propertyCategories
+    val categories = FirebaseRepository.propertyCategories
+
+    init {
+        loadProperties()
+    }
+
+    private fun loadProperties() {
+        viewModelScope.launch {
+            isLoading = true
+            try {
+                allProperties = FirebaseRepository.fetchProperties()
+                Log.i(TAG, "Loaded ${allProperties.size} properties (mock=${FirebaseRepository.useMockData})")
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to load properties, using mock", e)
+                allProperties = MockDataRepository.properties
+            } finally {
+                isLoading = false
+            }
+        }
+    }
 
     val filteredProperties: List<Property>
         get() {
@@ -113,7 +141,9 @@ class PropertyViewModel : ViewModel() {
         allProperties.filter { savedPropertyIds.contains(it.id) }
 
     fun addProperty(property: Property) {
-        // In production this would POST to an API
-        (allProperties as MutableList).add(0, property)
+        allProperties = listOf(property) + allProperties
+        viewModelScope.launch {
+            FirebaseRepository.addPropertyToFirestore(property)
+        }
     }
 }

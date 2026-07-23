@@ -1,1 +1,6 @@
 .agents/.env
+
+*.jks
+*.keystore
+keystore-b64.txt
+

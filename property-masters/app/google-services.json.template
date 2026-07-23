@@ -1,0 +1,33 @@
+{
+  "_INFO": "This is a template. Replace this file with your actual google-services.json from Firebase Console.",
+  "_INFO2": "1. Go to https://console.firebase.google.com",
+  "_INFO3": "2. Create a project named 'property-masters'",
+  "_INFO4": "3. Add an Android app with package name 'com.propertymasters.app'",
+  "_INFO5": "4. Download google-services.json and replace this file",
+  "_INFO6": "5. The app works without this file using built-in mock data",
+  "project_info": {
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id": "your-project-id",
+    "storage_bucket": "your-project-id.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "YOUR_APP_ID",
+        "android_client_info": {
+          "package_name": "com.propertymasters.app"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "YOUR_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ]
+}

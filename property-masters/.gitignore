@@ -1,0 +1,7 @@
+*.jks
+*.keystore
+google-services.json
+!google-services.json.template
+keystore-b64.txt
+*.apk
+
