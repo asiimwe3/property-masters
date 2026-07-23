@@ -3,36 +3,28 @@ package com.propertymasters.app.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -42,12 +34,10 @@ import com.propertymasters.app.ui.components.CategoryChip
 import com.propertymasters.app.ui.components.PropertyGridCard
 import com.propertymasters.app.ui.components.SearchBar
 import com.propertymasters.app.ui.theme.BackgroundGray
-import com.propertymasters.app.ui.theme.ChipBackground
 import com.propertymasters.app.ui.theme.TealPrimary
 import com.propertymasters.app.ui.theme.TextDark
 import com.propertymasters.app.ui.theme.TextMuted
 import com.propertymasters.app.viewmodel.PropertyViewModel
-import androidx.compose.foundation.lazy.LazyRow
 
 @Composable
 fun PropertiesScreen(
@@ -70,11 +60,11 @@ fun PropertiesScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 SearchBar(
                     placeholder = "Search properties...",
-                    onFilterClick = { vm.toggleFilters() }
+                    onFilterClick = { vm.toggleFilters() },
+                    onSearchChange = { vm.updateSearchQuery(it) }
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Category chips
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(vm.categories) { category ->
                         CategoryChip(
@@ -100,7 +90,6 @@ fun PropertiesScreen(
             )
         }
 
-        // Grid
         val propertyPairs = vm.filteredProperties.chunked(2)
         items(propertyPairs) { pair ->
             Row(
@@ -126,9 +115,7 @@ fun PropertiesScreen(
 @Composable
 private fun FilterPanel(vm: PropertyViewModel) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp),
+        modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -146,8 +133,6 @@ private fun FilterPanel(vm: PropertyViewModel) {
             }
 
             Spacer(modifier = Modifier.height(8.dp))
-
-            // Min beds
             Text("Min Bedrooms: ${if (vm.minBeds == 0) "Any" else vm.minBeds}", fontSize = 13.sp, color = TextMuted)
             Slider(
                 value = vm.minBeds.toFloat(),
@@ -158,9 +143,7 @@ private fun FilterPanel(vm: PropertyViewModel) {
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-
-            // Max price
-            Text("Max Price: $${vm.maxPrice.formatWithCommas()}", fontSize = 13.sp, color = TextMuted)
+            Text("Max Price: $${"%,d".format(vm.maxPrice)}", fontSize = 13.sp, color = TextMuted)
             Slider(
                 value = vm.maxPrice.toFloat(),
                 onValueChange = { vm.updatePriceRange(vm.minPrice, it.toInt()) },
@@ -169,15 +152,11 @@ private fun FilterPanel(vm: PropertyViewModel) {
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                androidx.compose.material3.TextButton(onClick = { vm.resetFilters() }) {
+                TextButton(onClick = { vm.resetFilters() }) {
                     Text("Reset", color = TealPrimary, fontWeight = FontWeight.SemiBold)
                 }
             }
         }
     }
 }
-
-private fun Int.formatWithCommas(): String =
-    "%,d".format(this)

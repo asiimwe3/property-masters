@@ -38,7 +38,11 @@ fun BrokersScreen(
             ) {
                 SectionHeader(title = "Find a Broker")
                 Spacer(modifier = Modifier.height(12.dp))
-                SearchBar(placeholder = "Search brokers...", onFilterClick = null)
+                SearchBar(
+                    placeholder = "Search brokers...",
+                    onFilterClick = null,
+                    onSearchChange = { vm.updateSearchQuery(it) }
+                )
             }
         }
 
