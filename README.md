@@ -68,3 +68,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 ---
 
 <p align="center">Made with ❤️ in Uganda 🇺🇬</p>
+
+---
+Built by [DeryCode](https://derycode.publicvm.com) — Software, Blockchain, AI and Web3 Company in Uganda
+Contact: info@derycode.com · WhatsApp: +256 772 002 326
