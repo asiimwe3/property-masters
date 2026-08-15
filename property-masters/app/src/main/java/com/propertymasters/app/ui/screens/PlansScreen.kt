@@ -49,7 +49,7 @@ fun PlansScreen(onBack: () -> Unit) {
                     modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = if (plan.popular) sagecoLight else Color.White),
-                    border = androidx.compose.foundation.layout.BorderStroke(2.dp, sagecoTeal)
+                    border = androidx.compose.foundation.BorderStroke(2.dp, sagecoTeal)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Row(

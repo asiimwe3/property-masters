@@ -141,7 +141,7 @@ fun ContactScreen(onBack: () -> Unit) {
 }
 
 @Composable
-private fun ContactInfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, value: String) {
+private fun ContactInfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, value: String, sagecoTeal: Color = Color(0xFF0F766E)) {
     Row(modifier = Modifier.padding(vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
         Icon(icon, contentDescription = null, tint = sagecoTeal, modifier = Modifier.size(20.dp))
         Spacer(Modifier.width(12.dp))
