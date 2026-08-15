@@ -8,8 +8,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.propertymasters.app.data.model.Property
-import com.propertymasters.app.data.repository.FirebaseRepository
 import com.propertymasters.app.data.repository.MockDataRepository
+import com.propertymasters.app.data.repository.SupabaseRepository
 import kotlinx.coroutines.launch
 
 class PropertyViewModel : ViewModel() {
@@ -30,7 +30,7 @@ class PropertyViewModel : ViewModel() {
     var minPrice by mutableStateOf(0)
         private set
 
-    var maxPrice by mutableStateOf(700_000)
+    var maxPrice by mutableStateOf(700_000_000)
         private set
 
     var minBeds by mutableStateOf(0)
@@ -41,7 +41,7 @@ class PropertyViewModel : ViewModel() {
 
     val savedPropertyIds = mutableStateListOf<String>()
 
-    val categories = FirebaseRepository.propertyCategories
+    val categories = listOf("All", "Residential", "Commercial", "Land", "Green Project")
 
     init {
         loadProperties()
@@ -51,8 +51,8 @@ class PropertyViewModel : ViewModel() {
         viewModelScope.launch {
             isLoading = true
             try {
-                allProperties = FirebaseRepository.fetchProperties()
-                Log.i(TAG, "Loaded ${allProperties.size} properties (mock=${FirebaseRepository.useMockData})")
+                allProperties = SupabaseRepository.fetchProperties()
+                Log.i(TAG, "Loaded ${allProperties.size} properties (mock=${SupabaseRepository.useMockData})")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to load properties, using mock", e)
                 allProperties = MockDataRepository.properties
@@ -98,32 +98,17 @@ class PropertyViewModel : ViewModel() {
     val featuredProperties: List<Property>
         get() = allProperties.filter { it.isFeatured }
 
-    fun updateSearchQuery(query: String) {
-        searchQuery = query
-    }
-
-    fun updateCategory(category: String) {
-        selectedCategory = category
-    }
-
-    fun updatePriceRange(min: Int, max: Int) {
-        minPrice = min
-        maxPrice = max
-    }
-
-    fun updateMinBeds(beds: Int) {
-        minBeds = beds
-    }
-
-    fun toggleFilters() {
-        showFilters = !showFilters
-    }
+    fun updateSearchQuery(query: String) { searchQuery = query }
+    fun updateCategory(category: String) { selectedCategory = category }
+    fun updatePriceRange(min: Int, max: Int) { minPrice = min; maxPrice = max }
+    fun updateMinBeds(beds: Int) { minBeds = beds }
+    fun toggleFilters() { showFilters = !showFilters }
 
     fun resetFilters() {
         searchQuery = ""
         selectedCategory = "All"
         minPrice = 0
-        maxPrice = 700_000
+        maxPrice = 700_000_000
         minBeds = 0
     }
 
@@ -143,7 +128,7 @@ class PropertyViewModel : ViewModel() {
     fun addProperty(property: Property) {
         allProperties = listOf(property) + allProperties
         viewModelScope.launch {
-            FirebaseRepository.addPropertyToFirestore(property)
+            SupabaseRepository.addProperty(property)
         }
     }
 }

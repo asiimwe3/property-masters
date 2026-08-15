@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.propertymasters.app.data.model.UserProfile
-import com.propertymasters.app.data.repository.FirebaseRepository
 import com.propertymasters.app.data.repository.MockDataRepository
+import com.propertymasters.app.data.repository.SupabaseRepository
 import kotlinx.coroutines.launch
 
 class AppViewModel : ViewModel() {
@@ -28,22 +28,21 @@ class AppViewModel : ViewModel() {
         private set
 
     init {
-        // Check if Firebase user is already logged in
-        val firebaseUser = FirebaseRepository.getCurrentFirebaseUser()
-        if (firebaseUser != null) {
+        // Check if Supabase user is already logged in
+        if (SupabaseRepository.isSignedIn) {
             currentUser = UserProfile(
-                name = firebaseUser.displayName ?: "User",
-                email = firebaseUser.email ?: "",
-                photoUrl = firebaseUser.photoUrl?.toString() ?: "https://randomuser.me/api/portraits/women/65.jpg",
-                isVerified = firebaseUser.isEmailVerified,
-                phone = firebaseUser.phoneNumber ?: "",
+                name = "User",
+                email = "",
+                photoUrl = "https://randomuser.me/api/portraits/women/65.jpg",
+                isVerified = false,
+                phone = "",
                 joinedDate = "Today",
                 savedProperties = emptyList(),
                 listedProperties = emptyList()
             )
             isLoggedIn = true
         } else {
-            // Start with mock user for demo (works without Firebase)
+            // Start with mock user for demo
             currentUser = MockDataRepository.currentUser
             isLoggedIn = true
         }
@@ -51,30 +50,30 @@ class AppViewModel : ViewModel() {
 
     fun login(email: String, password: String): Boolean {
         if (email.isNotBlank() && password.length >= 4) {
-            // Try Firebase Auth first
             viewModelScope.launch {
-                val result = FirebaseRepository.signInWithEmail(email, password)
+                val result = SupabaseRepository.signInWithEmail(email, password)
                 if (result.isSuccess) {
-                    val user = result.getOrNull()!!
+                    val json = result.getOrNull()!!
+                    val userJson = json.optJSONObject("user")
+                    val meta = userJson?.optJSONObject("user_metadata") ?: json.optJSONObject("data")
                     currentUser = UserProfile(
-                        name = user.displayName ?: email.substringBefore("@").replace(".", " ")
-                            .replaceFirstChar { it.uppercase() },
-                        email = user.email ?: email,
-                        photoUrl = user.photoUrl?.toString() ?: "https://randomuser.me/api/portraits/women/65.jpg",
-                        isVerified = user.isEmailVerified,
-                        phone = user.phoneNumber ?: "",
+                        name = meta?.optString("full_name")
+                            ?: email.substringBefore("@").replace(".", " ")
+                                .replaceFirstChar { it.uppercase() },
+                        email = json.optString("email", userJson?.optString("email", email)),
+                        photoUrl = "https://randomuser.me/api/portraits/women/65.jpg",
+                        isVerified = json.optBoolean("email_confirmed", false),
+                        phone = "",
                         joinedDate = "Today"
                     )
                     isLoggedIn = true
                     authError = ""
-                    Log.i(TAG, "Firebase login success: ${user.email}")
+                    Log.i(TAG, "Supabase login success: ${currentUser?.email}")
                 } else {
-                    // Firebase failed — use local login as fallback
-                    Log.w(TAG, "Firebase auth failed, using local login", result.exceptionOrNull())
+                    Log.w(TAG, "Supabase auth failed, using local login", result.exceptionOrNull())
                     localLogin(email)
                 }
             }
-            // Return true optimistically (UI updates via state)
             return true
         }
         return false
@@ -83,12 +82,11 @@ class AppViewModel : ViewModel() {
     fun signup(name: String, email: String, password: String): Boolean {
         if (name.isNotBlank() && email.isNotBlank() && password.length >= 4) {
             viewModelScope.launch {
-                val result = FirebaseRepository.signUpWithEmail(name, email, password)
+                val result = SupabaseRepository.signUpWithEmail(name, email, password)
                 if (result.isSuccess) {
-                    val user = result.getOrNull()!!
                     currentUser = UserProfile(
                         name = name,
-                        email = user.email ?: email,
+                        email = email,
                         photoUrl = "https://randomuser.me/api/portraits/women/65.jpg",
                         isVerified = false,
                         phone = "",
@@ -96,10 +94,9 @@ class AppViewModel : ViewModel() {
                     )
                     isLoggedIn = true
                     authError = ""
-                    Log.i(TAG, "Firebase signup success: ${user.email}")
+                    Log.i(TAG, "Supabase signup success: $email")
                 } else {
-                    // Firebase failed — use local signup as fallback
-                    Log.w(TAG, "Firebase signup failed, using local signup", result.exceptionOrNull())
+                    Log.w(TAG, "Supabase signup failed, using local signup", result.exceptionOrNull())
                     localSignup(name, email)
                 }
             }
@@ -134,20 +131,12 @@ class AppViewModel : ViewModel() {
     }
 
     fun logout() {
-        FirebaseRepository.signOut()
+        SupabaseRepository.signOut()
         isLoggedIn = false
         currentUser = null
     }
 
-    fun showLoginScreen() {
-        showLogin = true
-    }
-
-    fun dismissLogin() {
-        showLogin = false
-    }
-
-    fun clearAuthError() {
-        authError = ""
-    }
+    fun showLoginScreen() { showLogin = true }
+    fun dismissLogin() { showLogin = false }
+    fun clearAuthError() { authError = "" }
 }

@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.propertymasters.app.data.model.Job
-import com.propertymasters.app.data.repository.FirebaseRepository
 import com.propertymasters.app.data.repository.MockDataRepository
+import com.propertymasters.app.data.repository.SupabaseRepository
 import kotlinx.coroutines.launch
 
 class JobViewModel : ViewModel() {
@@ -26,17 +26,15 @@ class JobViewModel : ViewModel() {
     var selectedCategory by mutableStateOf("All")
         private set
 
-    val categories = FirebaseRepository.jobCategories
+    val categories = listOf("All", "Sales", "Marketing", "Engineering", "Management", "Support")
 
-    init {
-        loadJobs()
-    }
+    init { loadJobs() }
 
     private fun loadJobs() {
         viewModelScope.launch {
             isLoading = true
             try {
-                allJobs = FirebaseRepository.fetchJobs()
+                allJobs = SupabaseRepository.fetchJobs()
                 Log.i(TAG, "Loaded ${allJobs.size} jobs")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to load jobs, using mock", e)
@@ -67,13 +65,7 @@ class JobViewModel : ViewModel() {
             return result
         }
 
-    fun updateSearchQuery(query: String) {
-        searchQuery = query
-    }
-
-    fun updateCategory(category: String) {
-        selectedCategory = category
-    }
-
+    fun updateSearchQuery(query: String) { searchQuery = query }
+    fun updateCategory(category: String) { selectedCategory = category }
     fun getJobById(id: String): Job? = MockDataRepository.getJobById(id)
 }
