@@ -24,8 +24,8 @@ Deno.serve(async (req) => {
     const limit = Math.min(parseInt(url.searchParams.get('limit')) || 20, 100);
     const offset = parseInt(url.searchParams.get('offset')) || 0;
 
-    const supabaseUrl = Deno.env.get('SUPABASE_URL');
-    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY');
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || 'https://emldbjqegftrngxypeca.supabase.co';
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtbGRianFlZ2Z0cm5neHlwZWNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzMjQzNTIsImV4cCI6MjA5MzkwMDM1Mn0.cofNEj5g3n9ls2HTXFXQG1_IXPUdLINDtYr820u2MtM';
 
     let queryUrl = `${supabaseUrl}/rest/v1/properties?select=*&status=eq.available&order=created_at.desc&limit=${limit}&offset=${offset}`;
 
