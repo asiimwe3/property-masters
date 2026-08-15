@@ -39,12 +39,12 @@ Functional UI and basic CRUD against Supabase, but critical security vulnerabili
 
 1. **Next.js Web App** (Vercel) — No source in GitHub. 15+ pages, 7 API routes. Static export with client-side data fetching.
 2. **React Native App** (Expo/RN) — In property-masters/rn-sageco. 17 screens. Uses Supabase directly.
-3. **Kotlin Android App** (Jetpack Compose) — In property-masters/property-masters. 5 tabs. Uses Firebase.
+3. **Kotlin Android App** (Jetpack Compose) — In property-masters/property-masters. 5 tabs. Uses Supabase (Firebase removed).
 
 ### 1.2 Critical: THREE Backends
 
 1. **Supabase (PostgreSQL)** — web app + React Native app
-2. **Firebase (Firestore)** — Kotlin Android app only
+2. **Supabase** — Kotlin Android app (Firebase removed)
 3. **Supabase Storage** — property images (mixed with Base44 media CDN)
 
 Property data entered via web (Supabase) is invisible to the Kotlin app (Firebase). The two mobile apps use entirely different databases with incompatible data models.
@@ -213,7 +213,7 @@ Screen status summary:
 
 ### 6.3 Kotlin App (Jetpack Compose)
 
-Uses Firebase (different from web/RN Supabase). 5 tabs: Home, Properties, Brokers, Jobs, Account.
+Uses Supabase (Firebase removed) (different from web/RN Supabase). 5 tabs: Home, Properties, Brokers, Jobs, Account.
 
 Issues:
 - Different backend = data isolation
@@ -221,7 +221,7 @@ Issues:
 - Property model incompatible with Supabase
 - `Jobs` tab doesn't exist in other platforms
 - No PesaPal, no booking, no broker registration, no image upload
-- `google-services.json` is a template placeholder
+- `google-services.json removed — app uses Supabase
 
 ---
 
