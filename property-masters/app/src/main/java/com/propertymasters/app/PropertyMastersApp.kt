@@ -20,16 +20,7 @@ import androidx.navigation.navArgument
 import com.propertymasters.app.ui.navigation.DetailScreen
 import com.propertymasters.app.ui.navigation.Screen
 import com.propertymasters.app.ui.navigation.bottomNavItems
-import com.propertymasters.app.ui.screens.AccountScreen
-import com.propertymasters.app.ui.screens.AddPropertyScreen
-import com.propertymasters.app.ui.screens.BrokerDetailScreen
-import com.propertymasters.app.ui.screens.BrokersScreen
-import com.propertymasters.app.ui.screens.HomeScreen
-import com.propertymasters.app.ui.screens.JobDetailScreen
-import com.propertymasters.app.ui.screens.JobsScreen
-import com.propertymasters.app.ui.screens.LoginScreen
-import com.propertymasters.app.ui.screens.PropertyDetailScreen
-import com.propertymasters.app.ui.screens.PropertiesScreen
+import com.propertymasters.app.ui.screens.*
 import com.propertymasters.app.ui.theme.TealPrimary
 import com.propertymasters.app.ui.theme.TextMuted
 
@@ -90,7 +81,13 @@ fun PropertyMastersApp() {
                 HomeScreen(
                     onPropertyClick = { id -> navController.navigate(DetailScreen.PropertyDetail.createRoute(id)) },
                     onBrokerClick = { id -> navController.navigate(DetailScreen.BrokerDetail.createRoute(id)) },
-                    onSearchClick = { navController.navigate(Screen.Properties.route) }
+                    onSearchClick = { navController.navigate(Screen.Properties.route) },
+                    onBookViewing = { navController.navigate(DetailScreen.BookViewing.route) },
+                    onContact = { navController.navigate(DetailScreen.Contact.route) },
+                    onProjects = { navController.navigate(DetailScreen.Projects.route) },
+                    onPlans = { navController.navigate(DetailScreen.Plans.route) },
+                    onFaq = { navController.navigate(DetailScreen.Faq.route) },
+                    onBrokerRegister = { navController.navigate(DetailScreen.BrokerRegister.route) }
                 )
             }
 
@@ -102,7 +99,8 @@ fun PropertyMastersApp() {
 
             composable(Screen.Brokers.route) {
                 BrokersScreen(
-                    onBrokerClick = { id -> navController.navigate(DetailScreen.BrokerDetail.createRoute(id)) }
+                    onBrokerClick = { id -> navController.navigate(DetailScreen.BrokerDetail.createRoute(id)) },
+                    onRegisterClick = { navController.navigate(DetailScreen.BrokerRegister.route) }
                 )
             }
 
@@ -116,10 +114,15 @@ fun PropertyMastersApp() {
                 AccountScreen(
                     onPropertyClick = { id -> navController.navigate(DetailScreen.PropertyDetail.createRoute(id)) },
                     onAddProperty = { navController.navigate(DetailScreen.AddProperty.route) },
-                    onLogout = { navController.navigate(DetailScreen.Login.route) }
+                    onLogout = { navController.navigate(DetailScreen.Login.route) },
+                    onPlans = { navController.navigate(DetailScreen.Plans.route) },
+                    onContact = { navController.navigate(DetailScreen.Contact.route) },
+                    onFaq = { navController.navigate(DetailScreen.Faq.route) },
+                    onProjects = { navController.navigate(DetailScreen.Projects.route) }
                 )
             }
 
+            // Property Detail
             composable(
                 route = DetailScreen.PropertyDetail.route,
                 arguments = listOf(navArgument("propertyId") { type = NavType.StringType })
@@ -128,10 +131,12 @@ fun PropertyMastersApp() {
                 PropertyDetailScreen(
                     propertyId = propertyId,
                     onBack = { navController.popBackStack() },
-                    onBrokerClick = { id -> navController.navigate(DetailScreen.BrokerDetail.createRoute(id)) }
+                    onBrokerClick = { id -> navController.navigate(DetailScreen.BrokerDetail.createRoute(id)) },
+                    onBookViewing = { title -> navController.navigate(DetailScreen.BookViewingWithId.createRoute(propertyId, title)) }
                 )
             }
 
+            // Broker Detail
             composable(
                 route = DetailScreen.BrokerDetail.route,
                 arguments = listOf(navArgument("brokerId") { type = NavType.StringType })
@@ -144,6 +149,7 @@ fun PropertyMastersApp() {
                 )
             }
 
+            // Job Detail
             composable(
                 route = DetailScreen.JobDetail.route,
                 arguments = listOf(navArgument("jobId") { type = NavType.StringType })
@@ -155,6 +161,7 @@ fun PropertyMastersApp() {
                 )
             }
 
+            // Add Property
             composable(DetailScreen.AddProperty.route) {
                 AddPropertyScreen(
                     onBack = { navController.popBackStack() },
@@ -162,6 +169,7 @@ fun PropertyMastersApp() {
                 )
             }
 
+            // Login
             composable(DetailScreen.Login.route) {
                 LoginScreen(
                     onLoginSuccess = {
@@ -171,6 +179,60 @@ fun PropertyMastersApp() {
                         }
                     }
                 )
+            }
+
+            // Book Viewing (generic)
+            composable(
+                route = DetailScreen.BookViewing.route,
+                arguments = listOf(navArgument("propertyTitle") { type = NavType.StringType })
+            ) { entry ->
+                val title = java.net.URLDecoder.decode(entry.arguments?.getString("propertyTitle") ?: "Property", "UTF-8")
+                BookViewingScreen(
+                    propertyTitle = title,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
+            // Book Viewing (with property ID)
+            composable(
+                route = DetailScreen.BookViewingWithId.route,
+                arguments = listOf(
+                    navArgument("propertyId") { type = NavType.StringType },
+                    navArgument("propertyTitle") { type = NavType.StringType }
+                )
+            ) { entry ->
+                val id = entry.arguments?.getString("propertyId")
+                val title = java.net.URLDecoder.decode(entry.arguments?.getString("propertyTitle") ?: "Property", "UTF-8")
+                BookViewingScreen(
+                    propertyTitle = title,
+                    propertyId = id,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+
+            // Contact
+            composable(DetailScreen.Contact.route) {
+                ContactScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Broker Register
+            composable(DetailScreen.BrokerRegister.route) {
+                BrokerRegisterScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Plans
+            composable(DetailScreen.Plans.route) {
+                PlansScreen(onBack = { navController.popBackStack() })
+            }
+
+            // Projects
+            composable(DetailScreen.Projects.route) {
+                ProjectsScreen(onBack = { navController.popBackStack() })
+            }
+
+            // FAQ
+            composable(DetailScreen.Faq.route) {
+                FaqScreen(onBack = { navController.popBackStack() })
             }
         }
     }

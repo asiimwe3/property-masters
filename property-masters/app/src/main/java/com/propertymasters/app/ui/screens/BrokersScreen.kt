@@ -21,7 +21,8 @@ import com.propertymasters.app.viewmodel.BrokerViewModel
 
 @Composable
 fun BrokersScreen(
-    onBrokerClick: (String) -> Unit
+    onBrokerClick: (String) -> Unit,
+    onRegisterClick: () -> Unit = {}
 ) {
     val vm: BrokerViewModel = viewModel()
 

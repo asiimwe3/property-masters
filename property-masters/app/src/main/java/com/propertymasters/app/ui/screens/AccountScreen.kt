@@ -61,7 +61,11 @@ import com.propertymasters.app.viewmodel.PropertyViewModel
 fun AccountScreen(
     onPropertyClick: (String) -> Unit,
     onAddProperty: () -> Unit,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    onPlans: () -> Unit = {},
+    onContact: () -> Unit = {},
+    onFaq: () -> Unit = {},
+    onProjects: () -> Unit = {}
 ) {
     val appVm: AppViewModel = viewModel()
     val propertyVm: PropertyViewModel = viewModel()

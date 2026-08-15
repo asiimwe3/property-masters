@@ -36,6 +36,18 @@ sealed class DetailScreen(val route: String) {
     }
     object AddProperty : DetailScreen("add_property")
     object Login : DetailScreen("login")
+    object BookViewing : DetailScreen("book/{propertyTitle}") {
+        fun createRoute(propertyTitle: String) = "book/${java.net.URLEncoder.encode(propertyTitle, "UTF-8")}"
+    }
+    object BookViewingWithId : DetailScreen("book_id/{propertyId}/{propertyTitle}") {
+        fun createRoute(propertyId: String, propertyTitle: String) =
+            "book_id/${propertyId}/${java.net.URLEncoder.encode(propertyTitle, "UTF-8")}"
+    }
+    object Contact : DetailScreen("contact")
+    object BrokerRegister : DetailScreen("broker_register")
+    object Plans : DetailScreen("plans")
+    object Projects : DetailScreen("projects")
+    object Faq : DetailScreen("faq")
 }
 
 val bottomNavItems = listOf(

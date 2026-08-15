@@ -58,7 +58,8 @@ import com.propertymasters.app.viewmodel.PropertyViewModel
 fun PropertyDetailScreen(
     propertyId: String,
     onBack: () -> Unit,
-    onBrokerClick: (String) -> Unit
+    onBrokerClick: (String) -> Unit,
+    onBookViewing: (String) -> Unit = {}
 ) {
     val vm: PropertyViewModel = viewModel()
     val property = MockDataRepository.getPropertyById(propertyId)

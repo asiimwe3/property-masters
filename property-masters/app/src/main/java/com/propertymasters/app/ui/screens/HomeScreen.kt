@@ -59,7 +59,13 @@ import com.propertymasters.app.viewmodel.PropertyViewModel
 fun HomeScreen(
     onPropertyClick: (String) -> Unit,
     onBrokerClick: (String) -> Unit,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onBookViewing: () -> Unit = {},
+    onContact: () -> Unit = {},
+    onProjects: () -> Unit = {},
+    onPlans: () -> Unit = {},
+    onFaq: () -> Unit = {},
+    onBrokerRegister: () -> Unit = {}
 ) {
     val propertyVm: PropertyViewModel = viewModel()
     val brokerVm: BrokerViewModel = viewModel()

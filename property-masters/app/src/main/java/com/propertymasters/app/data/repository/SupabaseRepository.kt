@@ -265,6 +265,95 @@ object SupabaseRepository {
         }
     }
 
+
+    // ── Book Viewing ───────────────────────────────────────────
+
+    suspend fun saveBooking(
+        reference: String,
+        propertyId: String?,
+        propertyTitle: String,
+        customerName: String,
+        customerEmail: String,
+        customerPhone: String,
+        preferredDate: String,
+        timeSlot: String,
+        bookingType: String,
+        message: String,
+        totalAmount: Double,
+        businessShare: Double,
+        brokerShare: Double
+    ): Boolean {
+        val url = "$SUPABASE_URL/rest/v1/property_viewings"
+        val body = JSONObject().apply {
+            put("reference_id", reference)
+            if (propertyId != null) put("property_id", propertyId)
+            put("property_title", propertyTitle)
+            put("customer_name", customerName)
+            put("customer_email", customerEmail)
+            put("customer_phone", customerPhone)
+            put("preferred_date", preferredDate)
+            put("time_slot", timeSlot)
+            put("booking_type", bookingType)
+            put("message", message)
+            put("total_amount", totalAmount)
+            put("business_share", businessShare)
+            put("broker_share", brokerShare)
+            put("payment_status", "pending")
+        }.toString()
+
+        val (code, _) = httpPost(url, body, authHeaders())
+        return code in 200..299
+    }
+
+    // ── Contact Form ────────────────────────────────────────────
+
+    suspend fun sendContactMessage(
+        name: String,
+        email: String,
+        message: String,
+        phone: String = ""
+    ): Boolean {
+        val url = "$SUPABASE_URL/rest/v1/contact_messages"
+        val body = JSONObject().apply {
+            put("name", name)
+            put("email", email)
+            put("message", if (phone.isNotEmpty()) "$message\nPhone: $phone" else message)
+            put("status", "unread")
+        }.toString()
+
+        val (code, _) = httpPost(url, body, authHeaders())
+        return code in 200..299
+    }
+
+    // ── Register Broker ─────────────────────────────────────────
+
+    suspend fun registerBroker(
+        fullName: String,
+        email: String,
+        phone: String,
+        location: String,
+        specialization: String,
+        bio: String = "",
+        experienceYears: Int = 0
+    ): Boolean {
+        val url = "$SUPABASE_URL/rest/v1/brokers"
+        val body = JSONObject().apply {
+            put("full_name", fullName)
+            put("email", email)
+            put("phone", phone)
+            put("location", location)
+            put("specialization", specialization)
+            put("bio", bio)
+            put("experience_years", experienceYears)
+            put("registration_status", "pending")
+            put("verified", false)
+        }.toString()
+
+        val (code, _) = httpPost(url, body, authHeaders())
+        return code in 200..299
+    }
+
+
     // ── JSON → Model mappers ────────────────────────────────────
 
     private fun JSONObject.toProperty(): Property {
