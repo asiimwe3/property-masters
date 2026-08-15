@@ -40,12 +40,7 @@ jobs:
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
 
-      - name: Create placeholder google-services.json
-        working-directory: property-masters/app
-        run: |
-          if [ ! -f google-services.json ]; then
-            echo '{"project_info":{"project_number":"0","project_id":"placeholder","storage_bucket":"placeholder.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:0","android_client_info":{"package_name":"com.propertymasters.app"}},"api_key":[{"current_key":"placeholder"}],"services":{"appinvite_service":{"other_platform_oauth_client":[]}}}],"configuration_version":"1"}' > google-services.json
-          fi
+      # Note: google-services.json step removed — app now uses Supabase, not Firebase
 
       - name: Build Debug APK
         if: ${{ env.KEYSTORE_BASE64 == '' }}
