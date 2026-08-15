@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Property Masters"
+rootProject.name = "SageCo Evergreen"
 include(":app")

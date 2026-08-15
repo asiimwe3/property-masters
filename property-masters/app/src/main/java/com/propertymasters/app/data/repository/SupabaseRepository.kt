@@ -91,7 +91,7 @@ object SupabaseRepository {
             conn.doOutput = true
             headers.forEach { (k, v) -> conn.setRequestProperty(k, v) }
 
-            conn.outputStream.bufferWriter().use { it.write(body) }
+            conn.outputStream.bufferedWriter().use { it.write(body) }
 
             val code = conn.responseCode
             val response = if (code in 200..299) {

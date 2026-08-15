@@ -1,6 +1,7 @@
 package com.propertymasters.app.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -48,7 +49,7 @@ fun PlansScreen(onBack: () -> Unit) {
                     modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = if (plan.popular) sagecoLight else Color.White),
-                    border = if (plan.popular) ButtonDefaults.outlinedButtonBorder.copy(brush = sagecoTeal.let { androidx.compose.ui.graphics.SolidColor(it) }) else ButtonDefaults.outlinedButtonBorder
+                    border = androidx.compose.foundation.layout.BorderStroke(2.dp, sagecoTeal)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Row(
